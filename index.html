@@ -1,53 +1,25 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Sensor Test</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-    }
-    div {
-      margin-bottom: 20px;
-    }
-  </style>
+  <title>Detector de Emociones</title>
 </head>
 <body>
-  <h1>Sensor Test</h1>
-
-  <div id="geo">Cargando geolocalización...</div>
-  <div id="light">Cargando sensor de luz...</div>
-  <div id="motion">Cargando sensor de movimiento...</div>
-  <div id="visibility">Cargando estado de visibilidad...</div>
-
+  <video id="webcam" width="640" height="480" autoplay></video>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
   <script>
-    // Geolocalización
-    navigator.geolocation.getCurrentPosition(function(position) {
-      document.getElementById('geo').textContent = 'Latitud: ' + position.coords.latitude + ', Longitud: ' + position.coords.longitude;
-    });
+    // Accede a la cámara del usuario
+    navigator.mediaDevices.getUserMedia({video: true})
+      .then(stream => {
+        const video = document.getElementById('webcam');
+        video.srcObject = stream;
+        video.onloadedmetadata = () => {
+          video.play();
+        };
+      });
 
-    // Sensor de Luz Ambiental
-    if ('AmbientLightSensor' in window) {
-      const sensor = new AmbientLightSensor();
-      sensor.onreading = () => {
-        document.getElementById('light').textContent = 'Nivel de luz: ' + sensor.illuminance;
-      };
-      sensor.onerror = (event) => {
-        document.getElementById('light').textContent = `Error: ${event.error.name}`;
-      };
-      sensor.start();
-    } else {
-      document.getElementById('light').textContent = 'Sensor de luz no disponible';
-    }
+    // TODO: Carga tu modelo de detección de emociones con TensorFlow.js
+    // y úsalo para analizar las imágenes de la cámara en tiempo real.
 
-    // Acelerómetro y Giroscopio
-    window.addEventListener('deviceorientation', function(event) {
-      document.getElementById('motion').textContent = 'Alpha: ' + event.alpha + ', Beta: ' + event.beta + ', Gamma: ' + event.gamma;
-    });
-
-    // Page Visibility API
-    document.addEventListener('visibilitychange', function() {
-      document.getElementById('visibility').textContent = document.hidden ? 'Página no visible' : 'Página visible';
-    });
   </script>
 </body>
 </html>
