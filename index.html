@@ -9,8 +9,8 @@
   <h3 id="prediction"></h3>
 
   <script>
-    // Accede a la cámara del usuario
-    navigator.mediaDevices.getUserMedia({video: { width: 224, height: 224 }})
+    // Accede a la cámara trasera del usuario
+    navigator.mediaDevices.getUserMedia({video: { width: 224, height: 224, facingMode: 'environment' }})
       .then(stream => {
         const video = document.getElementById('webcam');
         video.srcObject = stream;
